@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WeatheApp.Model;
 
 namespace WeatheApp.ViewModel
 {
@@ -20,6 +21,31 @@ namespace WeatheApp.ViewModel
                 OnPropertyChanged("Query");
             }
         }
+
+        private CurrentConditions currentconditions;
+
+        public CurrentConditions CurrentConditions
+        {
+            get { return currentconditions; }
+            set 
+            {
+                currentconditions = value;
+                OnPropertyChanged("CurrentConditions");
+            }
+        }
+
+        private City selectedCity;
+
+        public City SelectedCity
+        {
+            get => selectedCity;
+            set
+            {
+                OnPropertyChanged("SelectedCity");
+                selectedCity = value;
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
