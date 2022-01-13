@@ -16,7 +16,7 @@ namespace WeatheApp.ViewModel.Helpers
         public const string AUTOSEARCH_ENDPOINT = "locations/v1/cities/autocomplete?apikey={0}&q={1}";
         public const string CURRENTCONDITIONS_ENDPOINT = "currentconditions/v1/{0}?apikey={1}";
 
-        public async Task<List<City>> GetCities(string query)
+        public static async Task<List<City>> GetCities(string query)
         {
             List<City> cities = new List<City>();
             string url = BASE_URL + string.Format(AUTOSEARCH_ENDPOINT, API_KEY, query);
@@ -31,7 +31,7 @@ namespace WeatheApp.ViewModel.Helpers
             return cities;
         }
 
-        public async Task<CurrentConditions> GetCurrentConditions(string cityKey)
+        public static async Task<CurrentConditions> GetCurrentConditions(string cityKey)
         {
             CurrentConditions currentConditions = new CurrentConditions();
             string url = BASE_URL + string.Format(CURRENTCONDITIONS_ENDPOINT, cityKey, API_KEY);

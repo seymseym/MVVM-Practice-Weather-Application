@@ -1,21 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WeatheApp.Model;
+using WeatheApp.ViewModel.Helpers;
 
 namespace WeatheApp.ViewModel
 {
-    class WeatherVM : INotifyPropertyChanged
+    public class WeatherVM : INotifyPropertyChanged
     {
+        public SearchCommand SearchCommand { get; set; }
+        public ObservableCollection<City> Cities { get; set; }
+
+        public WeatherVM()
+        {
+            SearchCommand = new SearchCommand(this);
+            Cities = new ObservableCollection<City>();
+        }
+
         private string query;
 
         public string Query
         {
             get { return query; }
-            set 
+            set
             {
                 query = value;
                 OnPropertyChanged("Query");
@@ -27,7 +38,7 @@ namespace WeatheApp.ViewModel
         public CurrentConditions CurrentConditions
         {
             get { return currentconditions; }
-            set 
+            set
             {
                 currentconditions = value;
                 OnPropertyChanged("CurrentConditions");
@@ -41,15 +52,36 @@ namespace WeatheApp.ViewModel
             get => selectedCity;
             set
             {
-                OnPropertyChanged("SelectedCity");
                 selectedCity = value;
+                if (selectedCity != null)
+                {
+                    OnPropertyChanged("SelectedCity");
+                    getCurrentConditions();
+                }
             }
         }
 
+        public async void getCurrentConditions()
+        {
+            Query = string.Empty;
+            CurrentConditions = await AccuWeatherHelper.GetCurrentConditions(selectedCity.Key);
+            Cities.Clear();
+        }
+
+        public async void makeQuery()
+        {
+            var cities = await AccuWeatherHelper.GetCities(Query);
+            Cities.Clear();
+
+            foreach (var city in cities)
+            {
+                Cities.Add(city);
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged (string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
