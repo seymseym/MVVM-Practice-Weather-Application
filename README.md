@@ -1,1 +1,1 @@
-"Weather-Applicaiton"
+"Weather-Application"
